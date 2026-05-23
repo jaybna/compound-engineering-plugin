@@ -9,6 +9,19 @@ All notable changes to the compound-engineering plugin will be documented in thi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.9.0](https://github.com/EveryInc/compound-engineering-plugin/compare/compound-engineering-v3.8.4...compound-engineering-v3.9.0) (2026-05-23)
+
+
+### Features
+
+* **ce-dogfood-beta:** add diff-scoped browser QA dogfood skill ([#848](https://github.com/EveryInc/compound-engineering-plugin/issues/848)) ([0aa6b55](https://github.com/EveryInc/compound-engineering-plugin/commit/0aa6b55a8026728de75aee0ff6ae5a0e006028c5))
+
+
+### Bug Fixes
+
+* **ce-commit-push-pr:** require user-visible bug summaries ([#853](https://github.com/EveryInc/compound-engineering-plugin/issues/853)) ([67d2736](https://github.com/EveryInc/compound-engineering-plugin/commit/67d273622e40a7b28f18c95f65379a36726ca558))
+* **commit:** auto-create feature branch on default branch ([#856](https://github.com/EveryInc/compound-engineering-plugin/issues/856)) ([26a8025](https://github.com/EveryInc/compound-engineering-plugin/commit/26a802551e44d12b837ac5d3e33fc7ffacbbf354))
+
 ## [3.8.4](https://github.com/EveryInc/compound-engineering-plugin/compare/compound-engineering-v3.8.3...compound-engineering-v3.8.4) (2026-05-21)
 
 
