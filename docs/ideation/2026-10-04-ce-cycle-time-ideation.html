@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CE Cycle Time Ideation</title>
+<style>
+:root {
+  --bg: #fbfaf8; --surface: #ffffff; --text: #24221f; --muted: #5d5850;
+  --border: #e3dfd8; --accent: #7a4b2a; --accent-soft: #f4ece4; --accent-text: #5e3a20;
+  --ok-soft: #e8f2ea; --ok-text: #24572f; --warn-soft: #fbf1df; --warn-text: #7a5410;
+  --code-bg: #f1eee9; --bar-a: #c9b8a6; --bar-b: #7a4b2a; --line: #8d857a;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1b1a18; --surface: #23211f; --text: #ebe7e1; --muted: #b5ada2;
+    --border: #3a3631; --accent: #d9a57c; --accent-soft: #33281f; --accent-text: #efc7a5;
+    --ok-soft: #1f3324; --ok-text: #a9d8b3; --warn-soft: #3a2f1a; --warn-text: #f0cf8e;
+    --code-bg: #2c2925; --bar-a: #6b5d50; --bar-b: #d9a57c; --line: #9d958a;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1b1a18; --surface: #23211f; --text: #ebe7e1; --muted: #b5ada2;
+  --border: #3a3631; --accent: #d9a57c; --accent-soft: #33281f; --accent-text: #efc7a5;
+  --ok-soft: #1f3324; --ok-text: #a9d8b3; --warn-soft: #3a2f1a; --warn-text: #f0cf8e;
+  --code-bg: #2c2925; --bar-a: #6b5d50; --bar-b: #d9a57c; --line: #9d958a;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+main { max-width: 900px; margin-inline: auto; padding: 32px 16px 64px; }
+p, li, dd { max-width: 72ch; }
+p { margin: 0 0 10pt 0; }
+.logo { text-align: center; margin: 0 0 12pt 0; }
+.logo img { width: 300px; max-width: 80%; height: auto; }
+h1 { text-align: center; font-size: 1.9rem; line-height: 1.25; margin: 8px 0 6px; }
+.kicker { text-align: center; color: var(--muted); margin-bottom: 18px; }
+.meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px; font-size: .9rem; color: var(--muted); margin-bottom: 28px; }
+.meta dt { display: inline; font-weight: 600; }
+.meta dd { display: inline; margin: 0 0 0 4px; }
+h2 { font-size: 1.4rem; margin: 40px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+h3 { font-size: 1.12rem; margin: 0 0 8px; }
+h3.sub { font-size: .95rem; margin: 16px 0 6px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; font-size: .88em; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+strong { color: inherit; }
+a { color: var(--accent); }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 18px 0 8px; }
+.stat { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px; text-align: center; }
+.stat b { display: block; font-size: 1.5rem; }
+.stat span { font-size: .85rem; color: var(--muted); }
+.callout { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; margin: 14px 0; }
+.callout .eyebrow { color: var(--accent-text); }
+.eyebrow { font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 4px; display: block; }
+article.idea { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; margin: 18px 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 12px; }
+.chip { font-size: .78rem; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--code-bg); color: var(--text); }
+.chip.id { background: var(--accent-soft); color: var(--accent-text); border-color: transparent; font-weight: 700; }
+.chip.ok { background: var(--ok-soft); color: var(--ok-text); border-color: transparent; }
+.chip.warn { background: var(--warn-soft); color: var(--warn-text); border-color: transparent; }
+dl.fields { margin: 0; }
+dl.fields dt { font-weight: 700; margin-top: 12px; }
+dl.fields dd { margin: 4px 0 0 0; }
+ul.jump { columns: 1; padding-left: 20px; }
+table { width: 100%; border-collapse: collapse; font-size: .9rem; margin: 10px 0; }
+th, td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+th { font-weight: 700; background: var(--code-bg); }
+figure { margin: 14px 0; }
+figcaption { font-size: .85rem; color: var(--muted); margin-top: 6px; }
+svg text { fill: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+svg .muted { fill: var(--muted); }
+.composition-signal { margin-top: 48px; padding-top: 12px; border-top: 1px solid var(--border); font-size: .82rem; color: var(--muted); }
+@media (max-width: 560px) { h1 { font-size: 1.5rem; } article.idea { padding: 14px; } }
+</style>
+</head>
+<body>
+<main>
+<p class="logo"><img src="https://storage.googleapis.com/files.styleblueprint.ai/images/logos/sb/sb-tagline-900x197.png" alt="StyleBlueprint: For a Life of Style + Substance" width="320" height="70"></p>
+<h1>Ideation: Faster Compound Engineering Runs Without Losing Rigor</h1>
+<p class="kicker">Upstream contribution ideation | Compound Engineering plugin | <time datetime="2026-10-04">2026-10-04</time></p>
+<dl class="meta">
+  <div><dt>Date:</dt><dd><time datetime="2026-10-04">2026-10-04</time></dd></div>
+  <div><dt>Topic:</dt><dd>ce-cycle-time</dd></div>
+  <div><dt>Mode:</dt><dd>repo-grounded</dd></div>
+  <div><dt>Focus:</dt><dd>safely reduce CE skill wall-clock time; each idea filable as a GitHub issue for the maintainer</dd></div>
+  <div><dt>Repo:</dt><dd><code>jaybna/compound-engineering-plugin</code> at upstream <code>9af474a7</code></dd></div>
+</dl>
+
+<section id="executive-summary">
+<h2>Executive summary</h2>
+<p>We looked for safe ways to make Compound Engineering faster for a team that runs it many times a day. The maintainer has already captured most of the easy wins in the last two months: a cheap review path for small changes, smaller skill files, parallel work by default, and timing logs for code review. Because of that, most ideas we generated were either already done, already decided against, or not yet provable.</p>
+<p>Five ideas survived a strict check against the code, the upstream issue tracker, and our own session history. The best one is a one-sentence fix to a measured problem: code review wastes about ten turns re-reading files because of how it asks the model to read them. The most interesting one came from our own sessions: review agents are told to receive a large, detailed brief, but in practice they get a short paraphrase of it, which costs quality. A small script would fix that and keep the run fast.</p>
+<p>The biggest lever we found is not a speed change at all. Only code review can show where its time goes. The maintainer has said several speed changes are waiting on measurement, so a free, read-only timing report for every skill would unlock the next round of speedups. We recommend filing ideas 1, 2 and 3 first.</p>
+<div class="stats">
+  <div class="stat"><b>43</b><span>raw ideas from 5 lenses</span></div>
+  <div class="stat"><b>24</b><span>after merge and dedupe</span></div>
+  <div class="stat"><b>5</b><span>survivors</span></div>
+  <div class="stat"><b>106</b><span>real reviewer spawns measured</span></div>
+</div>
+</section>
+
+<section id="grounding-context">
+<h2>Grounding Context</h2>
+<h3 class="sub">Codebase Context</h3>
+<p>Each core skill is a small <code>SKILL.md</code> plus required-read references (ce-plan about 4,800 reference lines, ce-code-review about 3,400, ce-doc-review about 2,500). ce-code-review already chooses lite, focused or full depth by consequence (<code>references/modes-and-output.md</code>, <code>scripts/review-scope.py</code>), and logs per-stage wall-clock to <code>stages.jsonl</code> through <code>scripts/run-log.py</code> (#1723). No other skill logs stage time, and the skill-eval harness records exit code and byte counts but no duration (<code>tests/skill-eval-cell/run.ts:429-436</code>).</p>
+<p>The measured full review in <code>docs/plans/2026-09-15-review-spine-cost-eval-report.md</code> took 1,100s on Claude: select 112s, peer 349s, dispatch 285s, merge 192s. The learning <code>docs/solutions/skill-design/review-cost-is-in-entering-the-spine-not-the-findings.md</code> says spine cost barely depends on diff size, and lists three open follow-ups: reference load and per-turn context growth, per-stage instrumentation beyond code review, and CI workflows as a lens floor.</p>
+<h3 class="sub">Past learnings</h3>
+<p>The maintainer measures before optimizing, removes before adding, gates by consequence rather than size, and requires a serial fallback on every host. #1815 (merged 2026-10-01) kept ce-doc-review's reviewer lenses as independent subagents and named two gates that "wait until they're measured".</p>
+<h3 class="sub">External context</h3>
+<p>Prior art on prefix caching for subagent fan-out (claude-code #74318, cost only), incremental re-review (Cursor Bugbot), early-stop voting (EMS), risk-gated review funnels (Meta RADAR) and fast lanes in spec frameworks (BMAD, Kiro).</p>
+<h3 class="sub">Our own sessions</h3>
+<p>Across 4 local Claude Code sessions on CE 3.24.0 to 3.27.0 (last 45 days), we measured 106 reviewer spawn prompts. Code-review prompts had a median of 4,509 bytes (max 9,085). Doc-review prompts had a median of 3,312 bytes (max 4,831). Crude skill durations from the same transcripts could not separate agent time from human idle time, which is itself evidence for idea 3.</p>
+</section>
+
+<section id="topic-axes">
+<h2>Topic Axes</h2>
+<ol>
+  <li>Path selection - which path a run takes</li>
+  <li>Per-turn context weight - what each turn re-reads</li>
+  <li>Subagent fan-out and waits</li>
+  <li>Handoffs and pauses between steps</li>
+  <li>Seeing where time goes</li>
+</ol>
+</section>
+
+<section id="ranked-ideas">
+<h2>Ranked Ideas</h2>
+<ul class="jump">
+  <li><a href="#idea-1">1. One Read call per reference at the code-review Stage 4 pointer</a></li>
+  <li><a href="#idea-2">2. Render reviewer prompts to files by script, spawn with a short pointer</a></li>
+  <li><a href="#idea-3">3. A read-only session profiler that times every CE skill</a></li>
+  <li><a href="#idea-4">4. lfg: run the browser test after push, while CI runs</a></li>
+  <li><a href="#idea-5">5. Start the code-review peer after Stage 2 when its trigger is already certain</a></li>
+</ul>
+
+<article class="idea" id="idea-1">
+<h3>1. One Read call per reference at the code-review Stage 4 pointer</h3>
+<div class="chips"><span class="chip id">Idea 1</span><span class="chip">Axis: Per-turn context weight</span><span class="chip ok">Confidence: 85%</span><span class="chip ok">Complexity: Low</span></div>
+<dl class="fields">
+<dt>Description</dt>
+<dd>At the Stage 4 read pointer (<code>skills/ce-code-review/references/dispatch-reviewers.md:61</code>), replace "read them ... in one parallel read-tool wave" with: issue one file-read call per reference, all in the same message, and never join files in a shell <code>cat</code>. Pin it with a tool-trace assertion in the existing live review cell (each Stage 4 reference read at most once, no multi-file shell read).</dd>
+<dt>Basis</dt>
+<dd><code>direct:</code> the maintainer's own eval, <code>docs/plans/2026-09-15-review-spine-cost-eval-report.md:35</code>: "turns 24 to 35 are twelve turns for what the plan expected to be two reads. The headless Claude orchestrator concatenated several large files into one <code>cat</code> call, the tool result was truncated, and it re-read the truncated tail and then the individual files ... The baseline run showed the same pattern ... the fix would be one reference per read call at the Stage 4 pointer. Not changed in this PR; recorded as follow-up." No upstream issue tracks it (#1412 and #1497 are a different truncation).</dd>
+<dt>Rationale</dt>
+<dd>Every orchestrator turn on the full path re-reads roughly 180k tokens of context (12.5M cache-read over 68 turns), so about ten wasted turns cost about 1-2 minutes and about 1.8M cache-read tokens per full Claude review. It happened in both the baseline and the post-#1723 run, so it is systematic rather than a fluke.</dd>
+<dt>Downsides</dt>
+<dd>Savings are Claude-specific (Codex used 29 tool calls and did not show it). The minute estimate uses the run's average turn time, so the issue should state 1-2 minutes, not a precise figure. Findings are unaffected because the same files are read.</dd>
+</dl>
+</article>
+
+<article class="idea" id="idea-2">
+<h3>2. Render reviewer prompts to files by script, spawn with a short pointer</h3>
+<div class="chips"><span class="chip id">Idea 2</span><span class="chip">Axis: Per-turn context weight</span><span class="chip warn">Confidence: 60%</span><span class="chip warn">Complexity: Medium</span></div>
+<dl class="fields">
+<dt>Description</dt>
+<dd>Both review skills tell the orchestrator to assemble each reviewer's prompt by inlining the full persona file, the shared template, scope rules and the JSON schema. ce-code-review's template block alone is 12,525 bytes, before a 5-10 KB persona, 4,954 bytes of diff-scope rules and the 8,192-byte schema. Orchestrators in real sessions do not do this. They send a paraphrase of a few KB. Proposal: a small stdlib script (beside <code>run-log.py</code>) writes each fully assembled prompt to <code>&lt;run-dir&gt;/prompts/&lt;reviewer&gt;.md</code>. The spawn prompt becomes a short pointer: read this file first, then review. The orchestrator no longer needs to read persona files into its own context at all.</dd>
+<dt>Basis</dt>
+<dd><code>direct:</code> <code>skills/ce-code-review/references/dispatch-reviewers.md:63-67</code> ("Each persona subagent receives: 1. Their persona file content ... 2. Shared diff-scope rules ... 3. The JSON output contract") and <code>skills/ce-doc-review/references/dispatch.md:9</code> ("pass its full content as <code>{persona_file}</code>"). <code>direct:</code> our measurement of 106 real spawn prompts on CE 3.24.0-3.27.0: code median 4,509 bytes, doc median 3,312 bytes, versus roughly 32-36 KB specified for code review. In the six code prompts we inspected, none carried the template's calibration paragraph and none pointed the reviewer at its persona file. <code>direct:</code> <code>docs/solutions/skill-design/pass-paths-not-content-to-subagents.md</code> (the maintainer's own path-passing learning).</dd>
+<dt>Rationale</dt>
+<dd>Two problems become one fix. Quality: reviewers appear to run on a compressed brief, so the persona's failure modes, suppress conditions and calibration may never reach them. Speed: following the spec literally would make the orchestrator generate roughly 8-9k output tokens per reviewer, which is the slowest kind of token. A script makes the faithful path the cheap path. It also removes the persona and template reads from the orchestrator's context, which rides along on every later turn (the learning's open "per-turn context growth" follow-up).</dd>
+<dt>Downsides</dt>
+<dd>Our evidence is one user's Claude Code sessions (4 sessions), so the maintainer should confirm with his own transcripts or the eval harness. A reviewer could skip reading the file. A cheap guard is to have the script stamp a nonce that the reviewer echoes in its artifact, checked by the existing findings helper. Hosts without file access keep today's inline path.</dd>
+</dl>
+<figure>
+<svg viewBox="0 0 640 170" width="100%" role="img" aria-label="Specified versus observed reviewer prompt size">
+  <text x="0" y="22" font-size="13" font-weight="700">Bytes per reviewer spawn prompt</text>
+  <text x="0" y="56" font-size="12">Specified (code review)</text>
+  <rect x="200" y="42" width="400" height="20" rx="3" fill="var(--bar-a)"></rect>
+  <text x="200" y="80" font-size="11" class="muted">about 32-36 KB: template 12.5 KB + persona 5-10 KB + scope rules 5 KB + schema 8 KB</text>
+  <text x="0" y="112" font-size="12">Observed median (code)</text>
+  <rect x="200" y="98" width="53" height="20" rx="3" fill="var(--bar-b)"></rect>
+  <text x="262" y="113" font-size="11">4.5 KB</text>
+  <text x="0" y="148" font-size="12">Observed median (doc)</text>
+  <rect x="200" y="134" width="39" height="20" rx="3" fill="var(--bar-b)"></rect>
+  <text x="248" y="149" font-size="11">3.3 KB</text>
+</svg>
+<figcaption>Observed sizes are from 106 spawns in our own sessions. The doc-review spec is larger still, because its template block is 23 KB before the persona and document slice.</figcaption>
+</figure>
+</article>
+
+<article class="idea" id="idea-3">
+<h3>3. A read-only session profiler that times every CE skill</h3>
+<div class="chips"><span class="chip id">Idea 3</span><span class="chip">Axis: Seeing where time goes</span><span class="chip ok">Confidence: 70%</span><span class="chip warn">Complexity: Low-Medium</span></div>
+<dl class="fields">
+<dt>Description</dt>
+<dd>Add a committed script that reads a host session transcript and prints, per CE skill invocation: wall-clock by phase, assistant turns, cache-read tokens, the longest tool waits, human think-time separated out, and files read more than once. Build it on the transcript parsers ce-compound already ships (<code>skills/ce-compound/scripts/session-history/extract-metadata.py</code>, <code>extract-skeleton.py</code>, which handle Claude, Codex, Cursor and Pi). Optionally, add <code>duration_ms</code> to each skill-eval cell record as a report-only column.</dd>
+<dt>Basis</dt>
+<dd><code>direct:</code> only ce-code-review has stage timing; <code>tests/skill-eval-cell/run.ts:429-436</code> records no duration; the #1723 plan deferred a cross-run consumer because "nothing consumes it yet". <code>direct:</code> #1815: "Two possible gates wait until they're measured: re-running only the affected <code>ce-doc-review</code> reviewers in round 2, and running <code>ce-simplify-code</code> inline on small scopes." <code>direct:</code> idea 1's defect was found only by hand-grading a tool trace.</dd>
+<dt>Rationale</dt>
+<dd>This is the "observe" step of the loop. It costs zero turns at runtime, which avoids the main objection to adding <code>run-log.py</code> calls to lfg (lfg's step boundaries are skill invocations, not shell calls, so each log call would be an extra turn at full context). It unblocks the maintainer's own deferred gates and turns the "hold" ideas below into decisions.</dd>
+<dt>Downsides</dt>
+<dd>No direct speedup. Transcript formats drift across host versions, so the parser should fail soft and be pinned with a fixture per host. Codex exposes less per-subagent usage, so some columns will be Claude-only.</dd>
+</dl>
+</article>
+
+<article class="idea" id="idea-4">
+<h3>4. lfg: run the browser test after push, while CI runs</h3>
+<div class="chips"><span class="chip id">Idea 4</span><span class="chip">Axis: Handoffs and pauses between steps</span><span class="chip warn">Confidence: 65%</span><span class="chip ok">Complexity: Low</span></div>
+<dl class="fields">
+<dt>Description</dt>
+<dd>lfg runs <code>ce-test-browser</code> (step 8) before <code>ce-commit-push-pr</code> (step 9), yet nothing consumes its result. Reorder to push first, then run the browser test while remote CI and review bots work, then babysit. The browser test must still finish before DONE, and a failure goes into the PR (comment or body) and the DONE report, not only a log line. A narrow companion change: <code>ce-test-browser</code> should state an explicit Skip exit when no changed file maps to a route, before it selects a driver.</dd>
+<dt>Basis</dt>
+<dd><code>direct:</code> <code>grep -rn -i browser skills/lfg/</code> returns two lines only: <code>SKILL.md:47</code> (do not run browser tests while fixes are uncommitted) and <code>SKILL.md:53</code> ("Invoke the <code>ce-test-browser</code> skill with <code>mode:pipeline</code>"). <code>skills/ce-test-browser/SKILL.md:44-45</code>: "Pipeline mode does not pause" and "Pipeline mode does not ask - log the failure and continue." <code>skills/lfg/references/shipping.md:33</code> already runs babysit unconditionally, so CI wait time is spent anyway.</dd>
+<dt>Rationale</dt>
+<dd>Steps 7 to 10 are strictly serial and CI is pure waiting. The browser test is the one stage that is independent of the commit and does not gate it, so overlapping it with CI saves about min(browser test, CI) on every UI-touching lfg run, with no loss of checking.</dd>
+<dt>Downsides</dt>
+<dd>A browser failure is reported after the PR is open rather than before. Stack mode (<code>shipping.md:19-25</code>) hands babysit off from step 9, so the reorder must respect that branch. Saving is unmeasured and zero for non-UI runs.</dd>
+</dl>
+<figure>
+<svg viewBox="0 0 640 150" width="100%" role="img" aria-label="lfg step order before and after">
+  <text x="0" y="20" font-size="12" font-weight="700">Today</text>
+  <rect x="70" y="8" width="150" height="22" rx="4" fill="var(--bar-a)"></rect><text x="80" y="23" font-size="11">8 browser test</text>
+  <rect x="226" y="8" width="130" height="22" rx="4" fill="var(--bar-a)"></rect><text x="236" y="23" font-size="11">9 push + PR</text>
+  <rect x="362" y="8" width="230" height="22" rx="4" fill="var(--bar-a)"></rect><text x="372" y="23" font-size="11">10 CI wait (babysit)</text>
+  <text x="0" y="78" font-size="12" font-weight="700">Proposed</text>
+  <rect x="70" y="66" width="130" height="22" rx="4" fill="var(--bar-b)"></rect><text x="80" y="81" font-size="11" style="fill:var(--bg)">9 push + PR</text>
+  <rect x="206" y="66" width="230" height="22" rx="4" fill="var(--bar-a)"></rect><text x="216" y="81" font-size="11">CI wait (babysit)</text>
+  <rect x="206" y="94" width="150" height="22" rx="4" fill="var(--bar-b)"></rect><text x="216" y="109" font-size="11" style="fill:var(--bg)">8 browser test</text>
+  <text x="206" y="138" font-size="11" class="muted">browser test overlaps CI; both finish before DONE</text>
+</svg>
+<figcaption>Illustrative only. Bar lengths are not measured durations.</figcaption>
+</figure>
+</article>
+
+<article class="idea" id="idea-5">
+<h3>5. Start the code-review peer after Stage 2 when its trigger is already certain</h3>
+<div class="chips"><span class="chip id">Idea 5</span><span class="chip">Axis: Subagent fan-out and waits</span><span class="chip warn">Confidence: 45%</span><span class="chip ok">Complexity: Low</span></div>
+<dl class="fields">
+<dt>Description</dt>
+<dd>The cross-model peer is the slowest leg of a full review, but it starts at Stage 3d, after reviewer selection. When the scope helper's own count already meets the adversarial trigger (at least 50 changed code lines), start the detached peer at the end of Stage 2 and do selection while it runs. Every other case keeps today's timing, including the judgment triggers (auth, persistence, retries), <code>depth:full</code> and apply authority. The disclosure and route checks move with the start, along with the rule that removes the in-process adversarial reviewer from the roster.</dd>
+<dt>Basis</dt>
+<dd><code>direct:</code> <code>skills/ce-code-review/references/cross-model-review.md:89</code> ("At Stage 3d (routing), start it as a detached, supervised job ... Only after that call returns may the host finalize the local reviewer roster"). <code>skills/ce-code-review/references/persona-catalog.md:38</code> (adversarial: "&gt;=50 changed code lines; ..."). Eval report stage table, lines 42-44: select 112s, peer 349s, dispatch 285s.</dd>
+<dt>Rationale</dt>
+<dd>In the measured run the peer finished about 64 seconds after local dispatch, so it sat on the critical path. Starting it earlier is the only way to shorten that path without changing any reviewer's work, and it costs no extra tokens when the trigger is certain.</dd>
+<dt>Downsides</dt>
+<dd>The saving is capped by the peer-minus-dispatch gap (64s in one sample) and is zero when local dispatch is slower. The maintainer can check this cheaply first, because <code>stages.jsonl</code> already exists for every code review. Moving the start also means code leaves the machine slightly earlier, so it is only safe on the mechanical trigger.</dd>
+</dl>
+<figure>
+<svg viewBox="0 0 640 140" width="100%" role="img" aria-label="Peer start timing before and after">
+  <text x="0" y="20" font-size="12" font-weight="700">Today</text>
+  <rect x="70" y="8" width="100" height="20" rx="4" fill="var(--bar-a)"></rect><text x="78" y="22" font-size="11">select 112s</text>
+  <rect x="172" y="8" width="230" height="20" rx="4" fill="var(--bar-a)"></rect><text x="180" y="22" font-size="11">local dispatch 285s</text>
+  <rect x="172" y="32" width="290" height="20" rx="4" fill="var(--bar-b)"></rect><text x="180" y="46" font-size="11" style="fill:var(--bg)">peer 349s (critical path)</text>
+  <text x="0" y="90" font-size="12" font-weight="700">Proposed</text>
+  <rect x="70" y="78" width="100" height="20" rx="4" fill="var(--bar-a)"></rect><text x="78" y="92" font-size="11">select 112s</text>
+  <rect x="172" y="78" width="230" height="20" rx="4" fill="var(--bar-a)"></rect><text x="180" y="92" font-size="11">local dispatch 285s</text>
+  <rect x="70" y="102" width="290" height="20" rx="4" fill="var(--bar-b)"></rect><text x="78" y="116" font-size="11" style="fill:var(--bg)">peer starts during select</text>
+</svg>
+<figcaption>Illustrative, scaled loosely to the one measured run.</figcaption>
+</figure>
+</article>
+</section>
+
+<section id="rejection-summary">
+<h2>Rejection Summary</h2>
+<p>A fresh-context verifier checked every candidate against the repo and the upstream tracker. Ideas marked "hold" are reasonable but should wait for the measurement in idea 3.</p>
+<table>
+<thead><tr><th>#</th><th>Idea</th><th>Reason Rejected</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Shared-first prompt order plus "warm one reviewer, then fan out"</td><td>Basis does not support a wall-clock gain: #74318 is cost-only and its fixes are harness-side; the shared static prefix is already shared by same-type siblings; warming adds delay.</td></tr>
+<tr><td>2</td><td>ce-doc-review shows local findings before the cross-model peer finishes</td><td>Hold. Helps only standalone interactive runs that activate peers (ce-plan and lfg call it non-interactive); <code>cross-model-review.md:155</code> deliberately waits; no doc-review timing data.</td></tr>
+<tr><td>3</td><td>ce-doc-review lite path by consequence gate</td><td>Hold. #1815 just kept doc-review lenses as independent subagents after a panel review; re-file only with stage data from idea 3.</td></tr>
+<tr><td>4</td><td>Delta re-review anchored on the last complete receipt</td><td>Pipelines forbid a second review (<code>ce-work/references/review-findings-followup.md:7-9</code>), so only manual loops benefit; no loop-frequency data; large contract change.</td></tr>
+<tr><td>5</td><td>lfg per-step stage log via a copy of run-log.py</td><td>lfg boundaries are skill invocations, not shell calls, so each log call adds a full-context turn; idea 3 gets the same data for free.</td></tr>
+<tr><td>6</td><td>Eval harness latency ceilings</td><td>Duplicates a stronger idea: folded into idea 3 as a report-only column; cells are behavior probes, so ceilings would be noise.</td></tr>
+<tr><td>7</td><td>Script-rendered report for <code>mode:agent</code> and all-clean rounds</td><td>All-clean full reviews are rare; the report leaf still owns judgment work; the claim that it sidesteps #1777 was wrong.</td></tr>
+<tr><td>8</td><td>Split the 44 KB <code>finish-review.md</code> per leaf</td><td>Saves seconds and about 4-6k tokens once per leaf; drift risk outweighs it until stage data shows the leaves are context-bound.</td></tr>
+<tr><td>9</td><td>Benchmark and tier down doc-review's ceiling-model reviewers</td><td>Too expensive relative to likely value now: a benchmark project, feasibility and security likely need the ceiling, #1815 kept the lenses, and PR #1821's per-role model map may cover the knob.</td></tr>
+<tr><td>10</td><td>Lower the peer budget on the focused path</td><td>Cuts thoroughness on the only independent read on that path; effort is already user-tunable and under active maintainer tuning (#1267, #1519).</td></tr>
+<tr><td>11</td><td>Hedge the focused-path peer with an in-process reviewer</td><td>Weakens cross-model independence (#1663) and doubles cost when it fires; its own measurement gate is unmet.</td></tr>
+<tr><td>12</td><td>One gates script for lfg's optional steps</td><td>Over-scoped: ce-test-browser already maps routes before starting a server; the narrow part is folded into idea 4.</td></tr>
+<tr><td>13</td><td>Show the plan path before ce-plan's mandatory doc-review</td><td>Basis refuted: <code>ce-plan/references/final-review.md:91</code> already prints the plan path before review.</td></tr>
+<tr><td>14</td><td>ce-plan background research during the scoping question</td><td>Scope-first is deliberate (<code>ce-plan/references/intake.md:148</code>, "before Phase 1 research is spent"), and brainstorm-sourced runs confirm after research.</td></tr>
+<tr><td>15</td><td>ce-work per-unit dependency release instead of layer barriers</td><td>Collides with orchestrator-owned commit order and revalidation (<code>execution-strategy.md:64-65</code>); large and risky; no duration data.</td></tr>
+<tr><td>16</td><td>Scope helper proposes the reviewer roster</td><td>Helper signals are deliberately "prompts to consider ... never automatic selection" (<code>select-and-route.md:44</code>); the selection share of the 112s is unknown.</td></tr>
+<tr><td>17</td><td>Per-route required-read weight manifest test</td><td>Preventive rather than a speedup; the maintainer prefers deletion over counter-mechanisms.</td></tr>
+<tr><td>18</td><td>"Peer is the critical path" bundle</td><td>Not issue-sized; its strongest part survives as idea 5.</td></tr>
+<tr><td>19</td><td>Original "orchestrator emits huge prompts slowly" framing</td><td>Basis refuted by our transcripts (prompts are small); the evidence instead revealed the fidelity gap now in idea 2.</td></tr>
+<tr><td>-</td><td>axis: Path selection</td><td>No survivor. The strongest gate already shipped (#1706), and the next one (doc-review) was just declined pending measurement (#1815).</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="sources">
+<h2>Sources</h2>
+<ul>
+  <li><a href="https://github.com/EveryInc/compound-engineering-plugin/blob/main/docs/plans/2026-09-15-review-spine-cost-eval-report.md">docs/plans/2026-09-15-review-spine-cost-eval-report.md</a></li>
+  <li><a href="https://github.com/EveryInc/compound-engineering-plugin/blob/main/docs/solutions/skill-design/review-cost-is-in-entering-the-spine-not-the-findings.md">docs/solutions/skill-design/review-cost-is-in-entering-the-spine-not-the-findings.md</a></li>
+  <li><a href="https://github.com/EveryInc/compound-engineering-plugin/blob/main/skills/ce-code-review/references/dispatch-reviewers.md">skills/ce-code-review/references/dispatch-reviewers.md</a></li>
+  <li><a href="https://github.com/EveryInc/compound-engineering-plugin/blob/main/skills/ce-doc-review/references/dispatch.md">skills/ce-doc-review/references/dispatch.md</a></li>
+  <li><a href="https://github.com/EveryInc/compound-engineering-plugin/blob/main/skills/ce-code-review/references/cross-model-review.md">skills/ce-code-review/references/cross-model-review.md</a></li>
+  <li><a href="https://github.com/EveryInc/compound-engineering-plugin/blob/main/skills/lfg/SKILL.md">skills/lfg/SKILL.md</a> and <a href="https://github.com/EveryInc/compound-engineering-plugin/blob/main/skills/lfg/references/shipping.md">skills/lfg/references/shipping.md</a></li>
+  <li><a href="https://github.com/EveryInc/compound-engineering-plugin/tree/main/skills/ce-compound/scripts/session-history">skills/ce-compound/scripts/session-history/</a></li>
+  <li><a href="https://github.com/EveryInc/compound-engineering-plugin/pull/1815">PR #1815</a>, <a href="https://github.com/EveryInc/compound-engineering-plugin/pull/1723">#1723</a>, <a href="https://github.com/EveryInc/compound-engineering-plugin/pull/1706">#1706</a>, <a href="https://github.com/EveryInc/compound-engineering-plugin/issues/1703">issue #1703</a>, <a href="https://github.com/EveryInc/compound-engineering-plugin/issues/1782">issue #1782</a></li>
+  <li><a href="https://github.com/anthropics/claude-code/issues/74318">anthropics/claude-code #74318</a> (subagent prompt-cache measurements)</li>
+</ul>
+</section>
+
+<footer class="composition-signal">Composed <time datetime="2026-10-04">2026-10-04</time> by ce-ideate (invoked from ce-pov) from the user prompt on CE cycle time, against upstream commit <code>9af474a7</code>.</footer>
+</main>
+</body>
+</html>
